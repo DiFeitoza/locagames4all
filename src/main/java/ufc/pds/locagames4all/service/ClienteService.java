@@ -4,11 +4,11 @@ import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ufc.pds.locagames4all.model.Cliente;
-import ufc.pds.locagames4all.repositories.ClienteRepository;
 import ufc.pds.locagames4all.repositories.ClienteRepositoryJPA;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClienteService {
@@ -30,8 +30,8 @@ public class ClienteService {
         return clienteRepository.findByCpf(cpf).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
     }
 
-    public Cliente atualizaCliente(Long id, Cliente clienteAtualizado){
-        Cliente clientePersistido = clienteRepository.findById(id).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
+    public Cliente atualizaCliente(String cpf, Cliente clienteAtualizado){
+        Cliente clientePersistido = clienteRepository.findByCpf(cpf).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
         if(validaAtualizacaoCliente(clientePersistido,clienteAtualizado)){
             return clienteRepository.save(clienteAtualizado);
         }else{
@@ -43,14 +43,25 @@ public class ClienteService {
         Cliente clientePersistido = clienteRepository.findById(id).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
         if(BooleanUtils.isFalse(clientePersistido.getExcluido())){
             clientePersistido.setExcluido(true);
+            clientePersistido.setNome(null);
+            clientePersistido.setEmail(null);
+            clientePersistido.setTelefone(null);
+            clientePersistido.setEndereco(null);
             return clienteRepository.save(clientePersistido);
         }else{
             throw new UnsupportedOperationException("Não foi possível concluir operação.");
         }
     }
 
+    public Cliente cadastrarCliente(Cliente cliente) {
+        Optional<Cliente> clienteJaCadastrado = clienteRepository.findByCpf(cliente.getCpf());
+        if (clienteJaCadastrado.isPresent()) {
+            throw new UnsupportedOperationException("Cliente Já cadastrado.");
+        }else{
+            return clienteRepository.save(cliente);
+        }
+    }
     private Boolean validaAtualizacaoCliente(Cliente persistido, Cliente atualizado){
-        return  BooleanUtils.isTrue(persistido.getCpf().equals(atualizado.getCpf())) &&
-                BooleanUtils.isTrue(persistido.getId().equals(atualizado.getId()));
+        return BooleanUtils.isTrue(persistido.getId().equals(atualizado.getId()));
     }
 }

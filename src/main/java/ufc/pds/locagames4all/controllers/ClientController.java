@@ -1,6 +1,7 @@
 package ufc.pds.locagames4all.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ufc.pds.locagames4all.model.Cliente;
@@ -31,8 +32,13 @@ public class ClientController {
         return ResponseEntity.ok().body(clienteService.desativaCliente(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Cliente> atualizarCliente(@PathVariable Long id, @RequestBody Cliente clienteAtualizado){
-        return ResponseEntity.ok().body(clienteService.atualizaCliente(id,clienteAtualizado));
+    @PutMapping("/{cpf}")
+    public ResponseEntity<Cliente> atualizarCliente(@PathVariable String cpf, @RequestBody Cliente clienteAtualizado){
+        return ResponseEntity.ok().body(clienteService.atualizaCliente(cpf,clienteAtualizado));
+    }
+
+    @PostMapping
+    public ResponseEntity<Cliente> cadastrarCliente(@RequestBody Cliente cliente){
+        return  ResponseEntity.status(HttpStatus.CREATED).body(clienteService.cadastrarCliente(cliente));
     }
 }
