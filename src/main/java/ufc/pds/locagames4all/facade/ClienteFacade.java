@@ -13,28 +13,28 @@ import ufc.pds.locagames4all.repositories.ClienteRepository;
 public class ClienteFacade {
     ClienteController clienteController;
 
-    @GetMapping("/")
+    /*@GetMapping("/")
     //http://localhost:8080/?campo=teste
     public String inicio(@RequestParam(value = "campo", defaultValue = "Valor default") String campo) {
         return "Oi, tenho vida. Você me falou '" + campo + "'";
-    }
+    }*/
 
     @PostMapping("/clientes")
     public ResponseEntity<String> cadastrarCliente(@RequestBody Cliente cliente) {
         return new ResponseEntity<>(clienteController.cadastrar(cliente).toString(), HttpStatus.CREATED);
     }
 
-    @GetMapping("/clientes")
-    public ResponseEntity<String> buscarClientePorCPF(@RequestParam(value = "cpf") String cpf) {
-        Cliente cliente = clienteController.buscarPorCPF(cpf);
-        if(cliente == null){
-            return new ResponseEntity<>("O CPF informado não pertence a um cliente cadastrado",
-                    HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(cliente.toString(), HttpStatus.OK);
-        }
-
-    }
+//    @GetMapping("/clientes")
+//    public ResponseEntity<String> buscarClientePorCPF(@RequestParam(value = "cpf") String cpf) {
+//        Cliente cliente = clienteController.buscarPorCPF(cpf);
+//        if(cliente == null){
+//            return new ResponseEntity<>("O CPF informado não pertence a um cliente cadastrado",
+//                    HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(cliente.toString(), HttpStatus.OK);
+//        }
+//
+//    }
 
     @PutMapping("/clientes")
     public ResponseEntity<String> atualizarCadastroDoCliente(@RequestBody Cliente cliente) {
