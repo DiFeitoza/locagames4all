@@ -39,8 +39,8 @@ public class ClienteService {
         }
     }
 
-    public Cliente desativaCliente(Long id){
-        Cliente clientePersistido = clienteRepository.findById(id).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
+    public Cliente desativaCliente(String cpf){
+        Cliente clientePersistido = clienteRepository.findByCpf(cpf).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
         if(BooleanUtils.isFalse(clientePersistido.getExcluido())){
             clientePersistido.setExcluido(true);
             clientePersistido.setNome(null);

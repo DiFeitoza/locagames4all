@@ -27,14 +27,14 @@ public class ClientController {
         return ResponseEntity.ok().body(clienteService.buscarClientePorCpf(cpf));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Cliente> desativarCliente(@PathVariable Long id){
-        return ResponseEntity.ok().body(clienteService.desativaCliente(id));
+    @DeleteMapping("/{cpf}")
+    public ResponseEntity<Cliente> desativarCliente(@PathVariable String cpf){
+        return ResponseEntity.ok().body(clienteService.desativaCliente(cpf));
     }
 
     @PutMapping("/{cpf}")
     public ResponseEntity<Cliente> atualizarCliente(@PathVariable String cpf, @RequestBody Cliente clienteAtualizado){
-        return ResponseEntity.ok().body(clienteService.atualizaCliente(cpf,clienteAtualizado));
+        return ResponseEntity.ok().body(clienteService.atualizaCliente(cpf, clienteAtualizado));
     }
 
     @PostMapping
