@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ufc.pds.locagames4all.model.Cliente;
 
+import java.util.Optional;
+
 @Repository
 public interface ClienteRepositoryJPA extends JpaRepository<Cliente, Long> {
-    public Cliente findByCpf(String cpf);
+    public Optional<Cliente> findByCpf(String cpf);
 }

@@ -22,11 +22,15 @@ public class ClienteService {
         return  clienteRepository.findAll();
     }
 
-    private Cliente buscarClientePorId(Long id){
+    public Cliente buscarClientePorId(Long id){
         return clienteRepository.findById(id).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
     }
 
-    private Cliente atualizaCliente(Long id, Cliente clienteAtualizado){
+    public Cliente buscarClientePorCpf(String cpf){
+        return clienteRepository.findByCpf(cpf).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
+    }
+
+    public Cliente atualizaCliente(Long id, Cliente clienteAtualizado){
         Cliente clientePersistido = clienteRepository.findById(id).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
         if(validaAtualizacaoCliente(clientePersistido,clienteAtualizado)){
             return clienteRepository.save(clienteAtualizado);
@@ -35,13 +39,14 @@ public class ClienteService {
         }
     }
 
-    private void desativaCliente(Long id){
+    public Cliente desativaCliente(Long id){
         Cliente clientePersistido = clienteRepository.findById(id).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
         if(BooleanUtils.isFalse(clientePersistido.getExcluido())){
             clientePersistido.setExcluido(true);
-            clienteRepository.save(clientePersistido);
+            return clienteRepository.save(clientePersistido);
+        }else{
+            throw new UnsupportedOperationException("Não foi possível concluir operação.");
         }
-        throw new UnsupportedOperationException("Não foi possível concluir operação.");
     }
 
     private Boolean validaAtualizacaoCliente(Cliente persistido, Cliente atualizado){

@@ -1,3 +1,4 @@
+/*
 package ufc.pds.locagames4all.facade;
 
 import org.springframework.boot.CommandLineRunner;
@@ -13,11 +14,13 @@ import ufc.pds.locagames4all.repositories.ClienteRepository;
 public class ClienteFacade {
     ClienteController clienteController;
 
-    /*@GetMapping("/")
+    */
+/*@GetMapping("/")
     //http://localhost:8080/?campo=teste
     public String inicio(@RequestParam(value = "campo", defaultValue = "Valor default") String campo) {
         return "Oi, tenho vida. Você me falou '" + campo + "'";
-    }*/
+    }*//*
+
 
     @PostMapping("/clientes")
     public ResponseEntity<String> cadastrarCliente(@RequestBody Cliente cliente) {
@@ -65,4 +68,4 @@ public class ClienteFacade {
             clienteController = new ClienteController(new ClienteRepository());
         };
     }
-}
+}*/
