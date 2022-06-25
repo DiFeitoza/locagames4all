@@ -4,13 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import ufc.pds.locagames4all.enums.StatusJogo;
+
 import ufc.pds.locagames4all.enums.TipoJogo;
 import ufc.pds.locagames4all.model.Cliente;
 import ufc.pds.locagames4all.model.Jogo;
+import ufc.pds.locagames4all.model.Locacao;
 import ufc.pds.locagames4all.repositories.ClienteRepositoryJPA;
 import ufc.pds.locagames4all.repositories.JogoRepositoryJPA;
+import ufc.pds.locagames4all.repositories.LocacaoRepositoryJPA;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 
 @Configuration
@@ -23,8 +26,10 @@ public class DataBaseTest implements CommandLineRunner {
     @Autowired
     private JogoRepositoryJPA jogoRepositoryJPA;
 
+    @Autowired
+    private LocacaoRepositoryJPA locacaoRepositoryJPA;
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args)  {
         Cliente c1 = new Cliente("Ana", "11122233344", "rua JK, 72","8899911223344","ana@bol.com");
         Cliente c2 = new Cliente("Borges", "51418818305", "rua JK, 81","8599922334455","borges@bol.com");
         Cliente c3 = new Cliente("Carlos", "35262405312", "avenida barao do rio branco","998855664422","carlinhos@bol.com");
@@ -40,5 +45,8 @@ public class DataBaseTest implements CommandLineRunner {
 
         jogoRepositoryJPA.saveAll(Arrays.asList(j1,j2,j3,j4));
 
+        Locacao l1 = new Locacao(c1,j1, LocalDate.parse("2022-06-01"), LocalDate.parse("2021-06-06"),LocalDate.parse("2021-06-06"));
+
+        locacaoRepositoryJPA.save(l1);
     }
 }
