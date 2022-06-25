@@ -5,6 +5,11 @@ import lombok.Getter;
 @Getter
 public enum StatusJogo {
 
-    DISPONIVEL, INDISPONIVEL, ALUGADO;
+    DISPONIVEL("Descrição"), INDISPONIVEL("Indisponivel"), ALUGADO("Alugado");
 
+    private String descricao;
+
+    StatusJogo(String status) {
+        this.descricao = status;
+    }
 }

@@ -19,6 +19,7 @@ public class Jogo {
     private Long id;
 
     private String nome;
+    @Enumerated(EnumType.STRING)
     private TipoJogo tipo;
     private String descricao;
     private Integer qtdMinJogadores;
@@ -26,6 +27,7 @@ public class Jogo {
     private Double valorDiario;
     private Boolean excluido;
 
+    @Enumerated(EnumType.STRING)
     private StatusJogo status;
 
     public Jogo (String nome, TipoJogo tipo, String descricao, Integer qtdMinJogadores, Integer qtdMaxJogadores, Double valorDiario) {
