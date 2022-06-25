@@ -32,7 +32,7 @@ public class ClienteService {
 
     public Cliente atualizaCliente(String cpf, Cliente clienteAtualizado){
         Cliente clientePersistido = clienteRepository.findByCpf(cpf).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
-        if(validaAtualizacaoCliente(clientePersistido,clienteAtualizado)){
+        if(Boolean.TRUE.equals(validaAtualizacaoCliente(clientePersistido,clienteAtualizado))){
             return clienteRepository.save(clienteAtualizado);
         }else{
             throw new UnsupportedOperationException("Não foi possível concluir operação.");
@@ -56,7 +56,12 @@ public class ClienteService {
     public Cliente cadastrarCliente(Cliente cliente) {
         Optional<Cliente> clienteJaCadastrado = clienteRepository.findByCpf(cliente.getCpf());
         if (clienteJaCadastrado.isPresent()) {
-            throw new UnsupportedOperationException("Cliente Já cadastrado.");
+            if(BooleanUtils.isTrue(clienteJaCadastrado.get().getExcluido())){
+                cliente.setId(clienteJaCadastrado.get().getId());
+                return clienteRepository.save(cliente);
+            }else{
+                throw new UnsupportedOperationException("Cliente Já cadastrado.");
+            }
         }else{
             return clienteRepository.save(cliente);
         }
