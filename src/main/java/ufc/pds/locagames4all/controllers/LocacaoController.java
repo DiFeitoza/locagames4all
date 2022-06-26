@@ -1,5 +1,6 @@
 package ufc.pds.locagames4all.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ufc.pds.locagames4all.dto.LocacaoDTO;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/locacoes")
+@Tag(name = "Locacao")
 public class LocacaoController {
     @Autowired
     private LocacaoService locacaoService;
