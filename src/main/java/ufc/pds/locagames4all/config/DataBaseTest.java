@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 
 @Configuration
-@Profile("test")
+//@Profile("test")
 public class DataBaseTest implements CommandLineRunner {
 
     @Autowired
