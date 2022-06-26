@@ -16,14 +16,14 @@ Este segundo permite visualizar as entradas esperadas assim como os retornos esp
 
 **test** e **prod**.
 
-## Teste
+## Test
 
 
 No perfil de **test** tem a sua disposição o banco de dados em mémoria H2.
 
 Para acessá-lo basta ir ao link
 
-<localhost:8080/h2-console>
+<http://localhost:8080/h2-console>
 
 Nele você poderá ver os dados e fazer alterações que não serão persistidos quando reiniciar a aplicação,
 Então nesse perfil os dados não são persistidos, mas permitem que a aplicação seja testada.
