@@ -51,6 +51,11 @@ public class JogoController {
         return ResponseEntity.ok().body(jogoService.buscarJogosPorQtdJogadoresMinEMax(min, max));
     }
 
+    @GetMapping("/valordiaria")
+    public ResponseEntity<List<Jogo>> buscarJogosPorValorDiaria(@RequestParam("valor") Double valor){
+        return ResponseEntity.ok().body(jogoService.buscarJogosPorValorDiaria(valor));
+    }
+
     @DeleteMapping ("/{id}")
     public ResponseEntity<Jogo> excluirJogo(@PathVariable Long id){
         return ResponseEntity.ok().body(jogoService.excluirJogo(id));
