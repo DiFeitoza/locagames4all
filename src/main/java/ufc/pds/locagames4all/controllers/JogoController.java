@@ -62,6 +62,11 @@ public class JogoController {
         return ResponseEntity.ok().body(jogoService.buscarJogosPorValorDiaria(valor));
     }
 
+    @GetMapping("/nome")
+    public ResponseEntity<List<Jogo>> buscarJogosPorNome(@RequestParam("contem_o_texto") String texto){
+        return ResponseEntity.ok().body(jogoService.buscarJogosPorNome(texto));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Jogo> atualizarJogo(@PathVariable Long id, @RequestBody Jogo jogoAtualizado){
         if(id.equals(jogoAtualizado.getId())){

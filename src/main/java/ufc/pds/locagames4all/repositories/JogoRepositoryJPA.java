@@ -21,4 +21,5 @@ public interface JogoRepositoryJPA extends JpaRepository<Jogo, Long> {
             " j.qtdMinJogadores <= ?2 and j.qtdMaxJogadores >= ?2")
     List<Jogo> findJogosByQtdMinAndMaxJogadores(int min, int max);
     List<Jogo> findJogosByValorDiariaIsLessThanEqual(Double valorDiaria);
+    List<Jogo> findByNomeContains(String texto);
 }

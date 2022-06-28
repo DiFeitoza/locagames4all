@@ -73,6 +73,14 @@ public class JogoService {
             return jogos;
     }
 
+    public List<Jogo> buscarJogosPorNome(String texto) {
+        List<Jogo> jogos = jogoRepository.findByNomeContains(texto);
+        if(jogos.isEmpty()){
+            throw new EntityNotFoundException(MSG_JOGOS_NAO_ENCONTRADOS);
+        } else
+            return jogos;
+    }
+
     public Jogo atualizarJogo(Jogo jogoAtualizado){
         if(jogoRepository.existsById(jogoAtualizado.getId())) {
             return jogoRepository.save(jogoAtualizado);
@@ -91,5 +99,4 @@ public class JogoService {
             throw new UnsupportedOperationException("Não foi possível concluir operação, o jogo já estava excluído.");
         }
     }
-
 }
