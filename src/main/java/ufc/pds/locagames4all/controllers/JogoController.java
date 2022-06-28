@@ -2,6 +2,7 @@ package ufc.pds.locagames4all.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ufc.pds.locagames4all.enums.StatusJogo;
@@ -18,6 +19,11 @@ public class JogoController {
 
     @Autowired
     private JogoService jogoService;
+
+    @PostMapping
+    public ResponseEntity<Jogo> cadastrarJogo(@RequestBody Jogo jogo){
+        return  ResponseEntity.status(HttpStatus.CREATED).body(jogoService.cadastrarJogo(jogo));
+    }
 
     @GetMapping
     //http://localhost:8080/jogos
@@ -54,6 +60,15 @@ public class JogoController {
     @GetMapping("/valordiaria")
     public ResponseEntity<List<Jogo>> buscarJogosPorValorDiaria(@RequestParam("valor") Double valor){
         return ResponseEntity.ok().body(jogoService.buscarJogosPorValorDiaria(valor));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Jogo> atualizarJogo(@PathVariable Long id, @RequestBody Jogo jogoAtualizado){
+        if(id.equals(jogoAtualizado.getId())){
+            return ResponseEntity.ok().body(jogoService.atualizarJogo(jogoAtualizado));
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
     @DeleteMapping ("/{id}")

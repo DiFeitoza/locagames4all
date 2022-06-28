@@ -19,6 +19,9 @@ public class JogoService {
 
     private static final String MSG_ENTITY_NOT_FOUND = "Jogo não encontrado.";
     private static final String MSG_JOGOS_NAO_ENCONTRADOS = "jogos não encontrados";
+
+    public Jogo cadastrarJogo(Jogo jogo) { return jogoRepository.save(jogo); }
+
     public List<Jogo> buscarTodosJogos(){
         return  jogoRepository.findAll();
     }
@@ -68,6 +71,14 @@ public class JogoService {
             throw new EntityNotFoundException(MSG_JOGOS_NAO_ENCONTRADOS);
         } else
             return jogos;
+    }
+
+    public Jogo atualizarJogo(Jogo jogoAtualizado){
+        if(jogoRepository.existsById(jogoAtualizado.getId())) {
+            return jogoRepository.save(jogoAtualizado);
+        } else {
+            throw new EntityNotFoundException(MSG_ENTITY_NOT_FOUND);
+        }
     }
 
     public Jogo excluirJogo(Long id){
