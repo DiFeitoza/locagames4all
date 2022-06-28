@@ -1,5 +1,6 @@
 package ufc.pds.locagames4all.service;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ufc.pds.locagames4all.enums.StatusJogo;
@@ -27,10 +28,10 @@ public class JogoService {
     }
 
     public List<Jogo> buscarJogosPorTipo(TipoJogo tipo){
-        List<Jogo> jogos =  jogoRepository.findByTipo(tipo);
+        List<Jogo> jogos = jogoRepository.findByTipo(tipo);
         if(jogos.isEmpty()){
             throw new EntityNotFoundException(MSG_JOGOS_NAO_ENCONTRADOS);
-        }else
+        } else
             return jogos;
     }
 
@@ -38,16 +39,37 @@ public class JogoService {
         List<Jogo> jogos =  jogoRepository.findByStatus(status);
         if(jogos.isEmpty()){
             throw new EntityNotFoundException(MSG_JOGOS_NAO_ENCONTRADOS);
-        }else
+        } else
+            return jogos;
+    }
+
+    public List<Jogo> buscarJogosPorQtdMinJogadores(int min){
+        List<Jogo> jogos = jogoRepository.
+                findJogosByQtdMinJogadoresIsLessThanEqualAndQtdMaxJogadoresIsGreaterThanEqual(min);
+        if(jogos.isEmpty()){
+            throw new EntityNotFoundException(MSG_JOGOS_NAO_ENCONTRADOS);
+        } else
+            return jogos;
+    }
+
+    public List<Jogo> buscarJogosPorQtdJogadoresMinEMax(int min, int max){
+        List<Jogo> jogos = jogoRepository.
+                findJogosByQtdMinJogadoresIsLessThanEqualAndQtdMaxJogadoresIsGreaterThanEqual(min, max);
+        if(jogos.isEmpty()){
+            throw new EntityNotFoundException(MSG_JOGOS_NAO_ENCONTRADOS);
+        } else
             return jogos;
     }
 
     public Jogo excluirJogo(Long id){
         Jogo jogo = jogoRepository.findById(id).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
-        jogo.setExcluido(true);
-        jogo.setStatus(StatusJogo.INDISPONIVEL);
-        return jogo;
+        if(BooleanUtils.isFalse(jogo.getExcluido())) {
+            jogo.setExcluido(true);
+            jogo.setStatus(StatusJogo.INDISPONIVEL);
+            return jogoRepository.save(jogo);
+        } else {
+            throw new UnsupportedOperationException("Não foi possível concluir operação, o jogo já estava excluído.");
+        }
     }
-
 
 }
