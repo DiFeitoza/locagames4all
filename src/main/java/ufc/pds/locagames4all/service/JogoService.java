@@ -46,18 +46,9 @@ public class JogoService {
             return jogos;
     }
 
-    public List<Jogo> buscarJogosPorQtdMinJogadores(int min){
+    public List<Jogo> buscarJogosPorQtdJogadores(int quantidade){
         List<Jogo> jogos = jogoRepository.
-                findJogosByQtdMinJogadores(min);
-        if(jogos.isEmpty()){
-            throw new EntityNotFoundException(MSG_JOGOS_NAO_ENCONTRADOS);
-        } else
-            return jogos;
-    }
-
-    public List<Jogo> buscarJogosPorQtdJogadoresMinEMax(int min, int max){
-        List<Jogo> jogos = jogoRepository.
-                findJogosByQtdMinAndMaxJogadores(min, max);
+                findJogosByQtdJogadores(quantidade);
         if(jogos.isEmpty()){
             throw new EntityNotFoundException(MSG_JOGOS_NAO_ENCONTRADOS);
         } else

@@ -15,11 +15,7 @@ public interface JogoRepositoryJPA extends JpaRepository<Jogo, Long> {
     List<Jogo> findByTipo(TipoJogo tipo);
     List<Jogo> findByStatus(StatusJogo status);
     @Query("select j from Jogo j where j.qtdMinJogadores <= ?1 and j.qtdMaxJogadores >= ?1")
-    List<Jogo> findJogosByQtdMinJogadores(int min);
-    @Query("select j from Jogo j where" +
-            " j.qtdMinJogadores <= ?1 and j.qtdMaxJogadores >= ?1 and" +
-            " j.qtdMinJogadores <= ?2 and j.qtdMaxJogadores >= ?2")
-    List<Jogo> findJogosByQtdMinAndMaxJogadores(int min, int max);
+    List<Jogo> findJogosByQtdJogadores(int quantidade);
     List<Jogo> findJogosByValorDiariaIsLessThanEqual(Double valorDiaria);
     List<Jogo> findByNomeContains(String texto);
 }

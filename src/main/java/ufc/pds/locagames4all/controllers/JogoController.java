@@ -46,15 +46,9 @@ public class JogoController {
         return ResponseEntity.ok().body(jogoService.buscarJogosPorStatus(status));
     }
 
-    @GetMapping("/qtdjogadores/{min}")
-    public ResponseEntity<List<Jogo>> buscarJogosPorQtdMinJogadores(@PathVariable Integer min){
-        return ResponseEntity.ok().body(jogoService.buscarJogosPorQtdMinJogadores(min));
-    }
-
-    @GetMapping("/qtdjogadores/{min}/{max}")
-    public ResponseEntity<List<Jogo>> buscarJogosPorQtdJogadoresMinEMax(@PathVariable Integer min,
-                                                                        @PathVariable Integer max){
-        return ResponseEntity.ok().body(jogoService.buscarJogosPorQtdJogadoresMinEMax(min, max));
+    @GetMapping("/qtdjogadores/{quantidade}")
+    public ResponseEntity<List<Jogo>> buscarJogosPorQtdJogadores(@PathVariable Integer quantidade){
+        return ResponseEntity.ok().body(jogoService.buscarJogosPorQtdJogadores(quantidade));
     }
 
     @GetMapping("/valordiaria")
