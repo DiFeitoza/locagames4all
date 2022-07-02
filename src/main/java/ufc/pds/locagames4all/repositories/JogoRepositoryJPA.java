@@ -17,5 +17,5 @@ public interface JogoRepositoryJPA extends JpaRepository<Jogo, Long> {
     @Query("select j from Jogo j where j.qtdMinJogadores <= ?1 and j.qtdMaxJogadores >= ?1")
     List<Jogo> findJogosByQtdJogadores(int quantidade);
     List<Jogo> findJogosByValorDiariaIsLessThanEqual(Double valorDiaria);
-    List<Jogo> findByNomeContains(String texto);
+    List<Jogo> findByNomeContainsIgnoreCase(String texto);
 }
