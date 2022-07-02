@@ -16,14 +16,13 @@ public class LocacaoDTO {
     private Long jogoId;
     private LocalDate dataDaLocacao;
     private LocalDate dataPrevistaDevolucao;
-    private LocalDate dataDaDevolucao;
+    private LocalDate dataDaDevolucao = null;
 
-    public LocacaoDTO(String cpf, Long jogoId, LocalDate dataDaLocacao, LocalDate dataPrevistaDevolucao, LocalDate dataDaDevolucao) {
+    public LocacaoDTO(String cpf, Long jogoId, LocalDate dataDaLocacao, LocalDate dataPrevistaDevolucao) {
         this.cpf = cpf;
         this.jogoId = jogoId;
         this.dataDaLocacao = dataDaLocacao;
         this.dataPrevistaDevolucao = dataPrevistaDevolucao;
-        this.dataDaDevolucao = dataDaDevolucao;
     }
     public LocacaoDTO(Locacao locacao){
         this.id = locacao.getId();
@@ -37,6 +36,7 @@ public class LocacaoDTO {
         Locacao model = new Locacao();
         model.setCliente(cliente);
         model.setJogo(jogo);
+        model.setValorDaDiariaNaLocacao(jogo.getValorDiaria());
         model.setDataDaLocacao(this.dataDaLocacao);
         model.setDataPrevistaDevolucao(this.dataPrevistaDevolucao);
         model.setDataDaDevolucao(this.dataDaDevolucao);
