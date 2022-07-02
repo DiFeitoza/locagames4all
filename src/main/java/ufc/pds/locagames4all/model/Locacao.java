@@ -20,7 +20,7 @@ public class Locacao {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
     @ManyToOne
-    @JoinColumn(name = "Jogo_id")
+    @JoinColumn(name = "jogo_id")
     private Jogo jogo;
 
     private LocalDate dataDaLocacao;
@@ -30,9 +30,9 @@ public class Locacao {
     private LocalDate dataDaDevolucao;
 
     public Locacao(Cliente cliente, Jogo jogo, LocalDate dataDaLocacao, LocalDate dataPrevistaDevolucao, LocalDate dataDaDevolucao) {
-        this.cliente= cliente;
-        this.jogo= jogo;
-        this.dataDaLocacao= dataDaLocacao;
+        this.cliente = cliente;
+        this.jogo = jogo;
+        this.dataDaLocacao = dataDaLocacao;
         this.dataPrevistaDevolucao = dataPrevistaDevolucao;
         this.dataDaDevolucao = dataDaDevolucao;
     }
