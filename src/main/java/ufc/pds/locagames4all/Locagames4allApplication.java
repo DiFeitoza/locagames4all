@@ -12,17 +12,7 @@ import org.springframework.context.annotation.Bean;
 public class Locagames4allApplication {
 
     public static void main(String[] args) {
-        System.out.println("Programa LocaGames4all iniciado.");
         SpringApplication.run(Locagames4allApplication.class, args);
-    }
-
-    @Bean
-    public OpenAPI LocaGames4all() {
-        return new OpenAPI()
-                .info(new Info().title("LocaGames4all API")
-                        .description("Sua API de locação de jogos de mesa!")
-                        .version("v0.0.1")
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org")));
     }
 
 }
