@@ -94,7 +94,7 @@ public class JogoController {
             "<br>Retorna todos os jogos que contenham o texto informado como parte do nome do jogo." +
             "<br><small>Instruções: clique em 'try it out', informe o 'texto' e clique no botão 'Execute'.")
     public ResponseEntity<List<Jogo>> buscarJogosPorNome(
-            @Parameter(description = "texto para busca no nome dos jogos")
+            @Parameter(description = "texto para busca no atributo 'nome' dos jogos")
             @RequestParam("texto") String texto){
         return ResponseEntity.ok().body(jogoService.buscarJogosPorNome(texto));
     }
