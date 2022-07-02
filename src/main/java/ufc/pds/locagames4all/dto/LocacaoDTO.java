@@ -19,9 +19,9 @@ public class LocacaoDTO {
     private LocalDate dataDaDevolucao;
 
     public LocacaoDTO(String cpf, Long jogoId, LocalDate dataDaLocacao, LocalDate dataPrevistaDevolucao, LocalDate dataDaDevolucao) {
-        this.cpf= cpf;
-        this.jogoId= jogoId;
-        this.dataDaLocacao= dataDaLocacao;
+        this.cpf = cpf;
+        this.jogoId = jogoId;
+        this.dataDaLocacao = dataDaLocacao;
         this.dataPrevistaDevolucao = dataPrevistaDevolucao;
         this.dataDaDevolucao = dataDaDevolucao;
     }

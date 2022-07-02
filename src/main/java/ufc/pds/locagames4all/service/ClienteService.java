@@ -18,6 +18,20 @@ public class ClienteService {
 
     private static final String MSG_ENTITY_NOT_FOUND = "Cliente não encontrado.";
 
+    public Cliente cadastrarCliente(Cliente cliente) {
+        Optional<Cliente> clienteJaCadastrado = clienteRepository.findByCpf(cliente.getCpf());
+        if (clienteJaCadastrado.isPresent()) {
+            if(BooleanUtils.isTrue(clienteJaCadastrado.get().getExcluido())){
+                cliente.setId(clienteJaCadastrado.get().getId());
+                return clienteRepository.save(cliente);
+            }else{
+                throw new UnsupportedOperationException("Cliente Já cadastrado.");
+            }
+        }else{
+            return clienteRepository.save(cliente);
+        }
+    }
+
     public List<Cliente> buscarTodosCLientes(){
         return  clienteRepository.findAll();
     }
@@ -28,6 +42,10 @@ public class ClienteService {
 
     public Cliente buscarClientePorCpf(String cpf){
         return clienteRepository.findByCpf(cpf).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
+    }
+
+    private Boolean validaAtualizacaoCliente(Cliente persistido, Cliente atualizado){
+        return BooleanUtils.isTrue(persistido.getId().equals(atualizado.getId()));
     }
 
     public Cliente atualizaCliente(String cpf, Cliente clienteAtualizado){
@@ -53,20 +71,4 @@ public class ClienteService {
         }
     }
 
-    public Cliente cadastrarCliente(Cliente cliente) {
-        Optional<Cliente> clienteJaCadastrado = clienteRepository.findByCpf(cliente.getCpf());
-        if (clienteJaCadastrado.isPresent()) {
-            if(BooleanUtils.isTrue(clienteJaCadastrado.get().getExcluido())){
-                cliente.setId(clienteJaCadastrado.get().getId());
-                return clienteRepository.save(cliente);
-            }else{
-                throw new UnsupportedOperationException("Cliente Já cadastrado.");
-            }
-        }else{
-            return clienteRepository.save(cliente);
-        }
-    }
-    private Boolean validaAtualizacaoCliente(Cliente persistido, Cliente atualizado){
-        return BooleanUtils.isTrue(persistido.getId().equals(atualizado.getId()));
-    }
 }

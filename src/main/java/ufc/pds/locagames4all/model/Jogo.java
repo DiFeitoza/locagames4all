@@ -9,7 +9,7 @@ import ufc.pds.locagames4all.enums.TipoJogo;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Jogo")
+@Table(name = "JOGO")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -24,20 +24,20 @@ public class Jogo {
     private String descricao;
     private Integer qtdMinJogadores;
     private Integer qtdMaxJogadores;
-    private Double valorDiario;
+    private Double valorDiaria;
     private Boolean excluido;
 
     @Enumerated(EnumType.STRING)
     private StatusJogo status;
 
-    public Jogo (String nome, TipoJogo tipo, String descricao, Integer qtdMinJogadores, Integer qtdMaxJogadores, Double valorDiario) {
+    public Jogo (String nome, TipoJogo tipo, String descricao, Integer qtdMinJogadores, Integer qtdMaxJogadores, Double valorDiaria) {
         this.nome = nome;
         this.tipo = tipo;
         this.descricao = descricao;
         this.qtdMaxJogadores = qtdMaxJogadores;
         this.qtdMinJogadores = qtdMinJogadores;
-        this.valorDiario=valorDiario;
-        this.excluido=false;
-        this.status=StatusJogo.DISPONIVEL;
+        this.valorDiaria = valorDiaria;
+        this.excluido = false;
+        this.status = StatusJogo.DISPONIVEL;
     }
 }
