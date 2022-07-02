@@ -1,5 +1,6 @@
 package ufc.pds.locagames4all.controllers;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,7 @@ public class LocacaoController {
     public ResponseEntity<Locacao> cadastrarLocacao(@RequestBody LocacaoDTO locacaoDTO){
         Cliente cliente = clienteService.buscarClientePorCpf(locacaoDTO.getCpf());
         Jogo jogo = jogoService.buscarJogoPorId(locacaoDTO.getJogoId());
+        locacaoDTO.setDataDaDevolucao(null);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(locacaoService.cadastrarLocacao(locacaoDTO.toModel(cliente, jogo)));
@@ -57,7 +59,14 @@ public class LocacaoController {
     }
 
     @GetMapping("/cpf/{cpf}")
-    public ResponseEntity<List<Locacao>> buscarHistoricoDeLocacoesPorCPF(@PathVariable String cpf){
-        return ResponseEntity.ok().body(locacaoService.buscarHistoricoDeLocacoesPorCPF(cpf));
+    public ResponseEntity<List<Locacao>> buscarHistoricoDeLocacoesPorCPF(
+            @PathVariable String cpf,
+            @RequestParam(name = "locacaoativa", required = false, defaultValue = "false") boolean locacaoativa
+    ){
+        if(locacaoativa){
+            return ResponseEntity.ok().body(locacaoService.buscarLocacoesAtivasPorCPF(cpf));
+        } else {
+            return ResponseEntity.ok().body(locacaoService.buscarHistoricoDeLocacoesPorCPF(cpf));
+        }
     }
 }

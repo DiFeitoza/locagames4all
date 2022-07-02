@@ -11,4 +11,5 @@ import java.util.List;
 public interface LocacaoRepositoryJPA extends JpaRepository<Locacao, Long> {
     List<Locacao> findByClienteId(long id);
     List<Locacao> findByJogoId(long id);
+    List<Locacao> findByClienteIdAndDataDaDevolucaoIsNull(long id);
 }

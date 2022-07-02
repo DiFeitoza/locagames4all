@@ -45,6 +45,16 @@ public class LocacaoService {
         }
     }
 
+    public List<Locacao> buscarLocacoesAtivasPorCPF(String cpf){
+        Cliente cliente = clienteService.buscarClientePorCpf(cpf);
+        List<Locacao> locacoes = locacaoRepositoryJPA.findByClienteIdAndDataDaDevolucaoIsNull(cliente.getId());
+        if(locacoes.isEmpty()){
+            throw new EntityNotFoundException(MSG_JOGOS_NAO_ENCONTRADOS);
+        } else {
+            return locacoes;
+        }
+    }
+
     public List<Locacao> buscarHistoricoDeLocacoesPorJogoId(Long jogoId) {
         List<Locacao> locacoes = locacaoRepositoryJPA.findByJogoId(jogoId);
         if(locacoes.isEmpty()){
