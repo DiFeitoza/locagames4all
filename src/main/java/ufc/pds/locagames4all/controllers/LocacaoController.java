@@ -1,6 +1,5 @@
 package ufc.pds.locagames4all.controllers;
 
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,7 @@ public class LocacaoController {
 
     private final ClienteService clienteService;
 
-    public LocacaoController(ClienteService clienteService) {
+    public LocacaoController(ClienteService clienteService){
         this.clienteService = clienteService;
     }
 
@@ -52,21 +51,26 @@ public class LocacaoController {
         return ResponseEntity.ok().body(locacaoService.buscarLocacoesPorId(id));
     }
 
-    @GetMapping("/jogoid/{id}")
-    public ResponseEntity<List<Locacao>> buscarHistoricoDeLocacoesPorJogoId(@PathVariable Long id){
-        List<Locacao> locacoes = locacaoService.buscarHistoricoDeLocacoesPorJogoId(id);
+    @GetMapping("/jogoid/{jogoId}")
+    public ResponseEntity<List<Locacao>> buscarHistoricoDeLocacoesPorJogoId(@PathVariable Long jogoId){
+        List<Locacao> locacoes = locacaoService.buscarHistoricoDeLocacoesPorJogoId(jogoId);
         return ResponseEntity.ok().body(locacoes);
     }
 
     @GetMapping("/cpf/{cpf}")
     public ResponseEntity<List<Locacao>> buscarHistoricoDeLocacoesPorCPF(
             @PathVariable String cpf,
-            @RequestParam(name = "locacaoativa", required = false, defaultValue = "false") boolean locacaoativa
-    ){
+            @RequestParam(name = "locacaoativa", required = false, defaultValue = "false") boolean locacaoativa){
         if(locacaoativa){
             return ResponseEntity.ok().body(locacaoService.buscarLocacoesAtivasPorCPF(cpf));
         } else {
             return ResponseEntity.ok().body(locacaoService.buscarHistoricoDeLocacoesPorCPF(cpf));
         }
+    }
+
+    @GetMapping("/{cpf}/{jogoId}")
+    public ResponseEntity<List<Locacao>> buscarLocacoesPorCPFeJogoId(
+            @PathVariable String cpf, @PathVariable Long jogoId){
+        return ResponseEntity.ok().body(locacaoService.buscarLocacoesPorCPFeJogoId(cpf, jogoId));
     }
 }

@@ -63,4 +63,14 @@ public class LocacaoService {
             return locacoes;
         }
     }
+
+    public List<Locacao> buscarLocacoesPorCPFeJogoId(String cpf, Long jogoId) {
+        Cliente cliente = clienteService.buscarClientePorCpf(cpf);
+        List<Locacao> locacoes = locacaoRepositoryJPA.findByClienteIdAndJogoId(cliente.getId(), jogoId);
+        if(locacoes.isEmpty()){
+            throw new EntityNotFoundException(MSG_JOGOS_NAO_ENCONTRADOS);
+        } else {
+            return locacoes;
+        }
+    }
 }
