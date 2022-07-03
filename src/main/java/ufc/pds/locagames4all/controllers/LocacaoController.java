@@ -71,6 +71,6 @@ public class LocacaoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> excluirLocacao(@PathVariable Long id) {
         locacaoService.excluirLocacao(id);
-        return ResponseEntity.ok().body("Locação excluída com suscesso!");
+        return ResponseEntity.ok().body("Locação excluída com sucesso!");
     }
 }

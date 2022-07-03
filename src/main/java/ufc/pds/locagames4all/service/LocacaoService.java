@@ -3,6 +3,7 @@ package ufc.pds.locagames4all.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ufc.pds.locagames4all.dto.LocacaoDTO;
+import ufc.pds.locagames4all.enums.StatusJogo;
 import ufc.pds.locagames4all.model.Cliente;
 import ufc.pds.locagames4all.model.Jogo;
 import ufc.pds.locagames4all.model.Locacao;
@@ -19,7 +20,9 @@ public class LocacaoService {
 
     private static final String MSG_LOCACAO_NAO_ENCONTRADA = "Locação não encontrada.";
     private static final String MSG_LOCACOES_NAO_ENCONTRADOS = "Locações não encontradas";
-    private static final String MSG_LOCACAO_JA_CONCLUIDA = "Locação já estava concluída";
+    private static final String MSG_LOCACAO_JA_CONCLUIDA = "A locação já estava concluída";
+    private static final String MSG_JOGO_NAO_DISPONIVEL = "Este jogo não está com situação disponível.";
+    private static final String MSG_CLIENTE_INATIVO = "Este cliente está com cadastro inativo.";
 
     @Autowired
     private LocacaoRepositoryJPA locacaoRepositoryJPA;
@@ -32,7 +35,14 @@ public class LocacaoService {
 
     public Locacao cadastrarLocacao(LocacaoDTO locacaoDTO) {
         Cliente cliente = clienteService.buscarClientePorCpf(locacaoDTO.getCpf());
+        if(cliente.getExcluido().equals(true)){
+            throw new UnsupportedOperationException(MSG_CLIENTE_INATIVO);
+        }
         Jogo jogo = jogoService.buscarJogoPorId(locacaoDTO.getJogoId());
+        if(!jogo.getStatus().equals(StatusJogo.DISPONIVEL)){
+            throw new UnsupportedOperationException(MSG_JOGO_NAO_DISPONIVEL);
+        }
+        jogo.setStatus(StatusJogo.ALUGADO);
         return locacaoRepositoryJPA.save(locacaoDTO.toModel(cliente, jogo));
     }
 
@@ -97,11 +107,13 @@ public class LocacaoService {
     public Locacao devolverLocacao(Long id) {
         Locacao locacao = consultarLocacaoParaDevolucao(id);
         locacao.setDataDaDevolucao(LocalDate.now());
+        locacao.getJogo().setStatus(StatusJogo.DISPONIVEL);
         return locacaoRepositoryJPA.save(locacao);
     }
 
     public void excluirLocacao(Long id) {
         Locacao locacao = buscarLocacoesPorId(id);
+        locacao.getJogo().setStatus(StatusJogo.DISPONIVEL);
         locacaoRepositoryJPA.delete(locacao);
     }
 }
