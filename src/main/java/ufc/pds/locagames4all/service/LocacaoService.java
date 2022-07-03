@@ -99,4 +99,9 @@ public class LocacaoService {
         locacao.setDataDaDevolucao(LocalDate.now());
         return locacaoRepositoryJPA.save(locacao);
     }
+
+    public void excluirLocacao(Long id) {
+        Locacao locacao = buscarLocacoesPorId(id);
+        locacaoRepositoryJPA.delete(locacao);
+    }
 }

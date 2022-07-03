@@ -67,4 +67,10 @@ public class LocacaoController {
     public ResponseEntity<Locacao> devolverLocacao(@PathVariable Long id) {
         return ResponseEntity.ok().body(locacaoService.devolverLocacao(id));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> excluirLocacao(@PathVariable Long id) {
+        locacaoService.excluirLocacao(id);
+        return ResponseEntity.ok().body("Locação excluída com suscesso!");
+    }
 }
