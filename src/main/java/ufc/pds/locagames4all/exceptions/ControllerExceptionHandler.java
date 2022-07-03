@@ -20,9 +20,9 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ExcecaoPadrao> recursoNaoEncontrado(EntityNotFoundException e){
         String categoriaErro = "Recurso não encontrado.";
         HttpStatus status = HttpStatus.NOT_FOUND;
-        return ResponseEntity.status(status).body(geraExcecao(e,categoriaErro,status.value()));
+        return ResponseEntity.status(status).body(geraExcecao(e, categoriaErro, status.value()));
     }
     private ExcecaoPadrao geraExcecao(Exception e,String erro ,Integer codigo){
-        return new ExcecaoPadrao(erro, e.getMessage(),codigo);
+        return new ExcecaoPadrao(erro, e.getMessage(), codigo);
     }
 }

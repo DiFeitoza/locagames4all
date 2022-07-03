@@ -65,7 +65,7 @@ public class JogoService {
     }
 
     public List<Jogo> buscarJogosPorNome(String texto) {
-        List<Jogo> jogos = jogoRepository.findByNomeContains(texto);
+        List<Jogo> jogos = jogoRepository.findByNomeContainsIgnoreCase(texto);
         if(jogos.isEmpty()){
             throw new EntityNotFoundException(MSG_JOGOS_NAO_ENCONTRADOS);
         } else
