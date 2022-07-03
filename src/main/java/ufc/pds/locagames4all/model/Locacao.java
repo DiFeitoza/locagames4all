@@ -29,7 +29,9 @@ public class Locacao {
 
     private LocalDate dataPrevistaDevolucao;
 
-    private LocalDate dataDaDevolucao;
+    private LocalDate dataDaDevolucao = null;
+
+    private Long qtdDiasLocados = null;
 
     private Double saldo = null;
 

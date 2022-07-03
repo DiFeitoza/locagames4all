@@ -58,8 +58,13 @@ public class LocacaoController {
         return ResponseEntity.ok().body(locacaoService.buscarLocacoesPorCPFeJogoId(cpf, jogoId));
     }
 
-    @GetMapping("/{id}/saldo")
-    public ResponseEntity<?> consultarLocacaoParaDevolucao(@PathVariable Long id) {
+    @GetMapping("/saldo/{id}")
+    public ResponseEntity<Locacao> consultarLocacaoParaDevolucao(@PathVariable Long id) {
         return ResponseEntity.ok().body(locacaoService.consultarLocacaoParaDevolucao(id));
+    }
+
+    @PatchMapping("/devolucao/{id}")
+    public ResponseEntity<Locacao> devolverLocacao(@PathVariable Long id) {
+        return ResponseEntity.ok().body(locacaoService.devolverLocacao(id));
     }
 }
