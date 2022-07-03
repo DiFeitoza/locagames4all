@@ -3,6 +3,7 @@ package ufc.pds.locagames4all.service;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ufc.pds.locagames4all.dto.ClienteDTO;
 import ufc.pds.locagames4all.model.Cliente;
 import ufc.pds.locagames4all.repositories.ClienteRepositoryJPA;
 
@@ -17,56 +18,48 @@ public class ClienteService {
     private ClienteRepositoryJPA clienteRepository;
 
     private static final String MSG_ENTITY_NOT_FOUND = "Cliente não encontrado.";
+    private static final String MSG_CLIENTE_JA_CADASTRADO = "Cliente já encontrado.";
 
-    public Cliente cadastrarCliente(Cliente cliente) {
+    public Cliente cadastrarCliente(ClienteDTO clienteDTO) {
+        Cliente cliente = clienteDTO.toModel();
         Optional<Cliente> clienteJaCadastrado = clienteRepository.findByCpf(cliente.getCpf());
         if (clienteJaCadastrado.isPresent()) {
-            if(BooleanUtils.isTrue(clienteJaCadastrado.get().getExcluido())){
+            if (BooleanUtils.isTrue(clienteJaCadastrado.get().getExcluido())) {
                 cliente.setId(clienteJaCadastrado.get().getId());
                 return clienteRepository.save(cliente);
-            }else{
-                throw new UnsupportedOperationException("Cliente Já cadastrado.");
+            } else {
+                throw new UnsupportedOperationException(MSG_CLIENTE_JA_CADASTRADO);
             }
-        }else{
+        } else {
             return clienteRepository.save(cliente);
         }
     }
 
-    public List<Cliente> buscarTodosCLientes(){
-        return  clienteRepository.findAll();
+    public List<Cliente> buscarTodosCLientes() {
+        return clienteRepository.findAll();
     }
 
-    public Cliente buscarClientePorId(Long id){
-        return clienteRepository.findById(id).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
+    public Cliente buscarClientePorCpf(String cpf) {
+        return clienteRepository.findByCpf(cpf).orElseThrow(() -> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
     }
 
-    public Cliente buscarClientePorCpf(String cpf){
-        return clienteRepository.findByCpf(cpf).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
+    public Cliente atualizaCliente(ClienteDTO clienteDTOAtualizado) {
+        Cliente clienteAtualizado = clienteDTOAtualizado.toModel();
+        Cliente clientePersistido = buscarClientePorCpf(clienteAtualizado.getCpf());
+        clienteAtualizado.setId(clientePersistido.getId());
+        return clienteRepository.save(clienteAtualizado);
     }
 
-    private Boolean validaAtualizacaoCliente(Cliente persistido, Cliente atualizado){
-        return BooleanUtils.isTrue(persistido.getId().equals(atualizado.getId()));
-    }
-
-    public Cliente atualizaCliente(String cpf, Cliente clienteAtualizado){
-        Cliente clientePersistido = clienteRepository.findByCpf(cpf).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
-        if(Boolean.TRUE.equals(validaAtualizacaoCliente(clientePersistido,clienteAtualizado))){
-            return clienteRepository.save(clienteAtualizado);
-        }else{
-            throw new UnsupportedOperationException("Não foi possível concluir operação.");
-        }
-    }
-
-    public Cliente desativaCliente(String cpf){
-        Cliente clientePersistido = clienteRepository.findByCpf(cpf).orElseThrow(()-> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
-        if(BooleanUtils.isFalse(clientePersistido.getExcluido())){
+    public Cliente desativaCliente(String cpf) {
+        Cliente clientePersistido = clienteRepository.findByCpf(cpf).orElseThrow(() -> new EntityNotFoundException(MSG_ENTITY_NOT_FOUND));
+        if (BooleanUtils.isFalse(clientePersistido.getExcluido())) {
             clientePersistido.setExcluido(true);
             clientePersistido.setNome(null);
             clientePersistido.setEmail(null);
             clientePersistido.setTelefone(null);
             clientePersistido.setEndereco(null);
             return clienteRepository.save(clientePersistido);
-        }else{
+        } else {
             throw new UnsupportedOperationException("Não foi possível concluir operação.");
         }
     }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ufc.pds.locagames4all.dto.ClienteDTO;
 import ufc.pds.locagames4all.model.Cliente;
 import ufc.pds.locagames4all.service.ClienteService;
 
@@ -19,8 +20,8 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @PostMapping
-    public ResponseEntity<Cliente> cadastrarCliente(@RequestBody Cliente cliente){
-        return  ResponseEntity.status(HttpStatus.CREATED).body(clienteService.cadastrarCliente(cliente));
+    public ResponseEntity<Cliente> cadastrarCliente(@RequestBody ClienteDTO clienteDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.cadastrarCliente(clienteDTO));
     }
 
     @GetMapping
@@ -30,17 +31,21 @@ public class ClienteController {
     }
 
     @GetMapping("/{cpf}")
-    public ResponseEntity<Cliente> buscarClientePorCpf(@PathVariable String cpf){
+    public ResponseEntity<Cliente> buscarClientePorCpf(@PathVariable String cpf) {
         return ResponseEntity.ok().body(clienteService.buscarClientePorCpf(cpf));
     }
 
     @PutMapping("/{cpf}")
-    public ResponseEntity<Cliente> atualizarCliente(@PathVariable String cpf, @RequestBody Cliente clienteAtualizado){
-        return ResponseEntity.ok().body(clienteService.atualizaCliente(cpf, clienteAtualizado));
+    public ResponseEntity<Cliente> atualizarCliente(
+            @PathVariable String cpf, @RequestBody ClienteDTO clienteDTOAtualizado) {
+        if(!cpf.equals(clienteDTOAtualizado.getCpf())){
+            throw new UnsupportedOperationException("CPF do path e do body da requisição precisam ser iguais");
+        }
+        return ResponseEntity.ok().body(clienteService.atualizaCliente(clienteDTOAtualizado));
     }
 
     @DeleteMapping("/{cpf}")
-    public ResponseEntity<Cliente> desativarCliente(@PathVariable String cpf){
+    public ResponseEntity<Cliente> desativarCliente(@PathVariable String cpf) {
         return ResponseEntity.ok().body(clienteService.desativaCliente(cpf));
     }
 }

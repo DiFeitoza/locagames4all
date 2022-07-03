@@ -21,14 +21,13 @@ public class Cliente {
     private String endereco;
     private String telefone;
     private String email;
-    private Boolean excluido;
+    private Boolean excluido = false;
 
-    public Cliente ( String nome, String cpf, String endereco, String telefone, String email){
-        this.nome= nome;
-        this.cpf=cpf;
-        this.endereco=endereco;
-        this.telefone=telefone;
-        this.email=email;
-        this.excluido=false;
+    public Cliente(String nome, String cpf, String endereco, String telefone, String email) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.endereco = endereco;
+        this.telefone = telefone;
+        this.email = email;
     }
 }
