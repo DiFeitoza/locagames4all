@@ -38,7 +38,7 @@ public class ClienteController {
     @PutMapping("/{cpf}")
     public ResponseEntity<Cliente> atualizarCliente(
             @PathVariable String cpf, @RequestBody ClienteDTO clienteDTOAtualizado) {
-        if(!cpf.equals(clienteDTOAtualizado.getCpf())){
+        if (!cpf.equals(clienteDTOAtualizado.getCpf())) {
             throw new UnsupportedOperationException("CPF do path e do body da requisição precisam ser iguais");
         }
         return ResponseEntity.ok().body(clienteService.atualizaCliente(clienteDTOAtualizado));
@@ -47,5 +47,23 @@ public class ClienteController {
     @DeleteMapping("/{cpf}")
     public ResponseEntity<Cliente> desativarCliente(@PathVariable String cpf) {
         return ResponseEntity.ok().body(clienteService.desativaCliente(cpf));
+    }
+
+    @PatchMapping("/{cpf}/jogosfavoritos/{jogoId}")
+    public ResponseEntity<?> favoritarJogo(
+            @PathVariable String cpf,
+            @PathVariable Long jogoId,
+            @RequestParam(name = "favoritar") boolean favoritar
+    ) {
+        if (favoritar) {
+            return ResponseEntity.ok().body(clienteService.favoritarJogo(cpf, jogoId));
+        } else {
+            return ResponseEntity.ok().body(clienteService.desfavoritarJogo(cpf, jogoId));
+        }
+    }
+
+    @GetMapping("/{cpf}/jogosfavoritos")
+    public ResponseEntity<?> listarJogosFavoritos(@PathVariable String cpf) {
+        return ResponseEntity.ok().body(clienteService.listarJogosFavoritos(cpf));
     }
 }
