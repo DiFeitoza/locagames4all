@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "CLIENTE")
@@ -21,7 +22,9 @@ public class Cliente {
     private String endereco;
     private String telefone;
     private String email;
-    private Boolean excluido = false;
+    private Boolean excluido;
+    @OneToMany
+    private List<Jogo> jogosFavoritos;
 
     public Cliente(String nome, String cpf, String endereco, String telefone, String email) {
         this.nome = nome;
@@ -29,5 +32,6 @@ public class Cliente {
         this.endereco = endereco;
         this.telefone = telefone;
         this.email = email;
+        this.excluido = false;
     }
 }
