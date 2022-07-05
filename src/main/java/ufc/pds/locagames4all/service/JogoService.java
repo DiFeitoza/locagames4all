@@ -3,6 +3,7 @@ package ufc.pds.locagames4all.service;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ufc.pds.locagames4all.dto.JogoDTO;
 import ufc.pds.locagames4all.enums.StatusJogo;
 import ufc.pds.locagames4all.enums.TipoJogo;
 import ufc.pds.locagames4all.model.Jogo;
@@ -20,7 +21,12 @@ public class JogoService {
     private static final String MSG_ENTITY_NOT_FOUND = "Jogo não encontrado.";
     private static final String MSG_JOGOS_NAO_ENCONTRADOS = "jogos não encontrados";
 
-    public Jogo cadastrarJogo(Jogo jogo) { return jogoRepository.save(jogo); }
+    public Jogo cadastrarJogo(JogoDTO jogoDTO) {
+        Jogo jogo = jogoDTO.toModel();
+        jogo.setExcluido(Boolean.FALSE);
+        jogo.setStatus(StatusJogo.DISPONIVEL);
+        return jogoRepository.save(jogo);
+    }
 
     public List<Jogo> buscarTodosJogos(){
         return  jogoRepository.findAll();
@@ -72,12 +78,13 @@ public class JogoService {
             return jogos;
     }
 
-    public Jogo atualizarJogo(Jogo jogoAtualizado){
-        if(jogoRepository.existsById(jogoAtualizado.getId())) {
-            return jogoRepository.save(jogoAtualizado);
-        } else {
-            throw new EntityNotFoundException(MSG_ENTITY_NOT_FOUND);
-        }
+    public Jogo atualizarJogo(JogoDTO jogoDTOAtualizado){
+        Jogo jogoPersistido = buscarJogoPorId(jogoDTOAtualizado.getId());
+        Jogo jogoAtualizado = jogoDTOAtualizado.toModel();
+        jogoAtualizado.setId(jogoPersistido.getId());
+        jogoAtualizado.setExcluido(jogoPersistido.getExcluido());
+        jogoAtualizado.setStatus(jogoPersistido.getStatus());
+        return jogoRepository.save(jogoAtualizado);
     }
 
     public Jogo excluirJogo(Long id){

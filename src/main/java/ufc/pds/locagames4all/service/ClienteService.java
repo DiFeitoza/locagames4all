@@ -9,6 +9,7 @@ import ufc.pds.locagames4all.model.Jogo;
 import ufc.pds.locagames4all.repositories.ClienteRepositoryJPA;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,8 @@ public class ClienteService {
 
     public Cliente cadastrarCliente(ClienteDTO clienteDTO) {
         Cliente cliente = clienteDTO.toModel();
+        cliente.setExcluido(Boolean.FALSE);
+        cliente.setJogosFavoritos(new ArrayList<>());
         Optional<Cliente> clienteJaCadastrado = clienteRepository.findByCpf(cliente.getCpf());
         if (clienteJaCadastrado.isPresent()) {
             if (BooleanUtils.isTrue(clienteJaCadastrado.get().getExcluido())) {
@@ -49,8 +52,9 @@ public class ClienteService {
 
     public Cliente atualizaCliente(ClienteDTO clienteDTOAtualizado) {
         Cliente clienteAtualizado = clienteDTOAtualizado.toModel();
-        Cliente clientePersistido = buscarClientePorCpf(clienteAtualizado.getCpf());
+        Cliente clientePersistido = buscarClientePorCpf(clienteDTOAtualizado.getCpf());
         clienteAtualizado.setId(clientePersistido.getId());
+        clienteAtualizado.setExcluido(clientePersistido.getExcluido());
         return clienteRepository.save(clienteAtualizado);
     }
 

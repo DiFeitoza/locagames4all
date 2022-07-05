@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,5 +34,6 @@ public class Cliente {
         this.telefone = telefone;
         this.email = email;
         this.excluido = false;
+        this.jogosFavoritos = new ArrayList<>();
     }
 }

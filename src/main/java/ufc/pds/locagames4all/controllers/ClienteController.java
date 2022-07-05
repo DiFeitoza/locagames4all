@@ -1,5 +1,7 @@
 package ufc.pds.locagames4all.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ufc.pds.locagames4all.dto.ClienteDTO;
 import ufc.pds.locagames4all.dto.JogoDTO;
 import ufc.pds.locagames4all.model.Cliente;
+import ufc.pds.locagames4all.model.Jogo;
 import ufc.pds.locagames4all.service.ClienteService;
 
 import java.net.URI;
@@ -30,6 +33,17 @@ public class ClienteController {
     ModelMapper modelMapper = new ModelMapper();
 
     @PostMapping
+    @Operation(summary = "Cadastrar cliente'",
+            description = "Permite o cadastro de clientes.<br>Retorna o cliente criado com sua location.")
+    public ResponseEntity<Cliente> cadastrarCliente(
+            @RequestBody ClienteDTO clienteDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.cadastrarCliente(clienteDTO));
+    }
+
+    @GetMapping
+    @Operation(summary = "Buscar clientes'",
+            description = "Permite a busca de todos os clientes.<br>" +
+                    "Retorna a lista com todos os clientes cadastrados.")
     public ResponseEntity<ClienteDTO> cadastrarCliente(@RequestBody ClienteDTO clienteDTO) {
         Cliente clienteCriado = clienteService.cadastrarCliente(clienteDTO);
         URI clienteURI = linkTo(methodOn(ClienteController.class).buscarClientePorCpf(clienteCriado.getCpf())).toUri();
@@ -42,13 +56,23 @@ public class ClienteController {
     }
 
     @GetMapping("/{cpf}")
-    public ResponseEntity<ClienteDTO> buscarClientePorCpf(@PathVariable String cpf) {
+    @Operation(summary = "Buscar cliente por CPF",
+            description = "Permite a busca de um cliente pelo CPF.<br>" +
+                    "Retorna o cliente cadastrado para o CPF informado.")
+    public ResponseEntity<ClienteDTO> buscarClientePorCpf(
+            @Parameter(description = "cpf do cliente que será buscado")
+            @PathVariable String cpf) {
         return ResponseEntity.ok().body(toDTO(clienteService.buscarClientePorCpf(cpf)));
     }
 
     @PutMapping("/{cpf}")
+    @Operation(summary = "Atualizar cliente por CPF",
+            description = "Permite a busca de um cliente pelo CPF.<br>" +
+                    "Retorna o cliente cadastrado para o CPF informado.")
     public ResponseEntity<ClienteDTO> atualizarCliente(
-            @PathVariable String cpf, @RequestBody ClienteDTO clienteDTOAtualizado) {
+            @Parameter(description = "cpf do cliente que será atualizado")
+            @PathVariable String cpf,
+            @RequestBody ClienteDTO clienteDTOAtualizado) {
         if (!cpf.equals(clienteDTOAtualizado.getCpf())) {
             throw new UnsupportedOperationException("CPF do path e do body da requisição precisam ser iguais");
         }
@@ -56,14 +80,26 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{cpf}")
-    public ResponseEntity<ClienteDTO> desativarCliente(@PathVariable String cpf) {
+    @Operation(summary = "Desativar cliente por CPF",
+            description = "Permite que o cliente tenha seus dados apagados e o cadastro desativado.<br>" +
+                    "Retorna o cliente com dados atualizados e cadastro com atributo 'excluido = true'.")
+    public ResponseEntity<ClienteDTO> desativarCliente(
+            @Parameter(description = "cpf do cliente que será desativado.")
+            @PathVariable String cpf) {
         return ResponseEntity.ok().body(toDTO(clienteService.desativaCliente(cpf)));
     }
 
     @PatchMapping("/{cpf}/jogosfavoritos/{jogoId}")
+    @Operation(summary = "Favoritar jogo",
+            description = "Permite que o cliente favorite um jogo pelo id deste. Um jogo favoritado não pode ser " +
+                    "favoritado novamente, da mesma forma, se não for um favorito não pode ser desfavoritado.<br>" +
+                    "Retorna o cliente com dados atualizados, incluindo o jogo favoritado ou desfavoritado.")
     public ResponseEntity<?> favoritarJogo(
+            @Parameter(description = "cpf do cliente que irá favoritar o jogo.")
             @PathVariable String cpf,
+            @Parameter(description = "id do jogo que será favoritado.")
             @PathVariable Long jogoId,
+            @Parameter(description = "favoritar igual a true para favoritar, false para desfavoritar.")
             @RequestParam(name = "favoritar") boolean favoritar
     ) {
         if (favoritar) {
@@ -74,7 +110,12 @@ public class ClienteController {
     }
 
     @GetMapping("/{cpf}/jogosfavoritos")
-    public ResponseEntity<?> buscarJogosFavoritos(@PathVariable String cpf) {
+    @Operation(summary = "Listar jogos favoritos",
+            description = "Permite listar os jogos favoritos de um cliente pelo cpf.<br>" +
+                    "Retorna a lista de jogos favoritos.")
+    public ResponseEntity<?> buscarJogosFavoritos(
+            @Parameter(description = "cpf do cliente para busca de favoritos")
+            @PathVariable String cpf) {
         return ResponseEntity.ok().body(jogoController.toCollectionDTO(clienteService.listarJogosFavoritos(cpf)));
     }
 
@@ -86,8 +127,12 @@ public class ClienteController {
                 .buscarClientes()).withRel("buscar-clientes"));
         clienteDTO.add(linkTo(methodOn(ClienteController.class)
                 .buscarJogosFavoritos(clienteDTO.getCpf())).withRel("buscar-favoritos"));
-        List<JogoDTO> jogosDTO = jogoController.toCollectionDTO(cliente.getJogosFavoritos());
-        clienteDTO.setJogosFavoritos(jogosDTO);
+
+        List<Jogo> jogosFavoritos = cliente.getJogosFavoritos();
+        if (jogosFavoritos != null) {
+            List<JogoDTO> jogosDTO = jogoController.toCollectionDTO(jogosFavoritos);
+            clienteDTO.setJogosFavoritos(jogosDTO);
+        }
         return clienteDTO;
     }
 
