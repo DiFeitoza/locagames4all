@@ -3,13 +3,13 @@ package ufc.pds.locagames4all.controllers;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ufc.pds.locagames4all.dto.LocacaoDTO;
 import ufc.pds.locagames4all.model.Locacao;
 import ufc.pds.locagames4all.service.LocacaoService;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,10 +26,10 @@ public class LocacaoController {
     ModelMapper modelMapper = new ModelMapper();
 
     @PostMapping
-    public ResponseEntity<Locacao> cadastrarLocacao(@RequestBody LocacaoDTO locacaoDTO) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(locacaoService.cadastrarLocacao(locacaoDTO));
+    public ResponseEntity<LocacaoDTO> cadastrarLocacao(@RequestBody LocacaoDTO locacaoDTO) {
+        Locacao locacaoCriada = locacaoService.cadastrarLocacao(locacaoDTO);
+        URI locacaoURI = linkTo(methodOn(LocacaoController.class).buscarLocacaoPorId(locacaoCriada.getId())).toUri();
+        return ResponseEntity.created(locacaoURI).body(toDTO(locacaoCriada));
     }
 
     @GetMapping
