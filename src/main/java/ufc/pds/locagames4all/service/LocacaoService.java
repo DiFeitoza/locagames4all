@@ -113,7 +113,9 @@ public class LocacaoService {
 
     public void excluirLocacao(Long id) {
         Locacao locacao = buscarLocacoesPorId(id);
-        locacao.getJogo().setStatus(StatusJogo.DISPONIVEL);
+        if(locacao.getDataDaDevolucao() != null) {
+            locacao.getJogo().setStatus(StatusJogo.DISPONIVEL);
+        }
         locacaoRepositoryJPA.delete(locacao);
     }
 }
