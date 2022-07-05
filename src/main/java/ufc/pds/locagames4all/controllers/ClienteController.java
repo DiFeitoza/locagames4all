@@ -33,7 +33,7 @@ public class ClienteController {
     ModelMapper modelMapper = new ModelMapper();
 
     @PostMapping
-    @Operation(summary = "Cadastrar cliente'",
+    @Operation(summary = "Cadastrar cliente.",
             description = "Permite o cadastro de clientes.<br>Retorna o cliente criado com sua location.")
     public ResponseEntity<ClienteDTO> cadastrarCliente(@RequestBody ClienteDTO clienteDTO) {
         Cliente clienteCriado = clienteService.cadastrarCliente(clienteDTO);
@@ -42,7 +42,7 @@ public class ClienteController {
     }
 
     @GetMapping
-    @Operation(summary = "Buscar clientes'",
+    @Operation(summary = "Buscar clientes.",
             description = "Permite a busca de todos os clientes.<br>" +
                     "Retorna a lista com todos os clientes cadastrados.")
     public List<ClienteDTO> buscarClientes() {
@@ -50,50 +50,50 @@ public class ClienteController {
     }
 
     @GetMapping("/{cpf}")
-    @Operation(summary = "Buscar cliente por CPF",
+    @Operation(summary = "Buscar cliente pelo CPF",
             description = "Permite a busca de um cliente pelo CPF.<br>" +
                     "Retorna o cliente cadastrado para o CPF informado.")
     public ResponseEntity<ClienteDTO> buscarClientePorCpf(
-            @Parameter(description = "cpf do cliente que será buscado")
+            @Parameter(description = "CPF do cliente que será buscado.")
             @PathVariable String cpf) {
         return ResponseEntity.ok().body(toDTO(clienteService.buscarClientePorCpf(cpf)));
     }
 
     @PutMapping("/{cpf}")
-    @Operation(summary = "Atualizar cliente por CPF",
+    @Operation(summary = "Atualizar cliente pelo CPF.",
             description = "Permite a busca de um cliente pelo CPF.<br>" +
                     "Retorna o cliente cadastrado para o CPF informado.")
     public ResponseEntity<ClienteDTO> atualizarCliente(
-            @Parameter(description = "cpf do cliente que será atualizado")
+            @Parameter(description = "CPF do cliente que será atualizado.")
             @PathVariable String cpf,
             @RequestBody ClienteDTO clienteDTOAtualizado) {
         if (!cpf.equals(clienteDTOAtualizado.getCpf())) {
-            throw new UnsupportedOperationException("CPF do path e do body da requisição precisam ser iguais");
+            throw new UnsupportedOperationException("CPF do path e do body da requisição precisam ser iguais.");
         }
         return ResponseEntity.ok().body(toDTO(clienteService.atualizaCliente(clienteDTOAtualizado)));
     }
 
     @DeleteMapping("/{cpf}")
-    @Operation(summary = "Desativar cliente por CPF",
+    @Operation(summary = "Desativar cliente pelo CPF.",
             description = "Permite que o cliente tenha seus dados apagados e o cadastro desativado.<br>" +
                     "Retorna o cliente com dados atualizados e cadastro com atributo 'excluido = true'.")
     public ResponseEntity<ClienteDTO> desativarCliente(
-            @Parameter(description = "cpf do cliente que será desativado.")
+            @Parameter(description = "CPF do cliente que será desativado.")
             @PathVariable String cpf) {
         return ResponseEntity.ok().body(toDTO(clienteService.desativaCliente(cpf)));
     }
 
     @PatchMapping("/{cpf}/jogosfavoritos/{jogoId}")
-    @Operation(summary = "Favoritar jogo",
+    @Operation(summary = "Favoritar jogo pelo CPF do cliente id do jogo.",
             description = "Permite que o cliente favorite um jogo pelo id deste. Um jogo favoritado não pode ser " +
                     "favoritado novamente, da mesma forma, se não for um favorito não pode ser desfavoritado.<br>" +
                     "Retorna o cliente com dados atualizados, incluindo o jogo favoritado ou desfavoritado.")
     public ResponseEntity<?> favoritarJogo(
-            @Parameter(description = "cpf do cliente que irá favoritar o jogo.")
+            @Parameter(description = "CPF do cliente que irá favoritar o jogo.")
             @PathVariable String cpf,
-            @Parameter(description = "id do jogo que será favoritado.")
+            @Parameter(description = "Id do jogo que será favoritado.")
             @PathVariable Long jogoId,
-            @Parameter(description = "favoritar igual a true para favoritar, false para desfavoritar.")
+            @Parameter(description = "Use 'favoritar=true' para favoritar ou 'favoritar=false' para desfavoritar.")
             @RequestParam(name = "favoritar") boolean favoritar
     ) {
         if (favoritar) {
@@ -104,11 +104,11 @@ public class ClienteController {
     }
 
     @GetMapping("/{cpf}/jogosfavoritos")
-    @Operation(summary = "Listar jogos favoritos",
-            description = "Permite listar os jogos favoritos de um cliente pelo cpf.<br>" +
+    @Operation(summary = "Listar jogos favoritos.",
+            description = "Permite listar os jogos favoritos de um cliente pelo CPF.<br>" +
                     "Retorna a lista de jogos favoritos.")
     public ResponseEntity<?> buscarJogosFavoritos(
-            @Parameter(description = "cpf do cliente para busca de favoritos")
+            @Parameter(description = "CPF do cliente para busca de favoritos.")
             @PathVariable String cpf) {
         return ResponseEntity.ok().body(jogoController.toCollectionDTO(clienteService.listarJogosFavoritos(cpf)));
     }

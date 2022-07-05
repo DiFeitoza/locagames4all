@@ -1,5 +1,7 @@
 package ufc.pds.locagames4all.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,31 +28,44 @@ public class LocacaoController {
     ModelMapper modelMapper = new ModelMapper();
 
     @PostMapping
-    public ResponseEntity<LocacaoDTO> cadastrarLocacao(@RequestBody LocacaoDTO locacaoDTO) {
+    @Operation(summary = "Cadastrar locação.",
+            description = "Permite cadastrar uma locação a partir de um CPF e um id válidos.<br>" +
+                    "Retorna retorna a locação cadastrada.")
+    public ResponseEntity<LocacaoDTO> cadastrarLocacao(
+            @Parameter(description = "Modelo de locação para cadastro.")
+            @RequestBody LocacaoDTO locacaoDTO) {
         Locacao locacaoCriada = locacaoService.cadastrarLocacao(locacaoDTO);
         URI locacaoURI = linkTo(methodOn(LocacaoController.class).buscarLocacaoPorId(locacaoCriada.getId())).toUri();
         return ResponseEntity.created(locacaoURI).body(toDTO(locacaoCriada));
     }
 
     @GetMapping
+    @Operation(summary = "Buscar locações.",
+            description = "Permite a busca de todos as locações.<br>" +
+                    "Retorna a lista com todos as locações cadastradas.")
     public ResponseEntity<List<LocacaoDTO>> buscarLocacoes() {
         return ResponseEntity.ok().body(toCollectionDTO(locacaoService.buscarTodasLocacoes()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LocacaoDTO> buscarLocacaoPorId(@PathVariable Long id) {
+    @Operation(summary = "Buscar locação pelo id.",
+            description = "Permite a busca de todos as locações.<br>" +
+                    "Retorna a lista com todos as locações cadastradas.")
+    public ResponseEntity<LocacaoDTO> buscarLocacaoPorId(
+            @Parameter(description = "Id da locação a ser buscada.")
+            @PathVariable Long id) {
         return ResponseEntity.ok().body(toDTO(locacaoService.buscarLocacoesPorId(id)));
     }
 
-    @GetMapping("/jogoid/{jogoId}")
-    public ResponseEntity<List<LocacaoDTO>> buscarHistoricoDeLocacoesPorJogoId(@PathVariable Long jogoId) {
-        List<Locacao> locacoes = locacaoService.buscarHistoricoDeLocacoesPorJogoId(jogoId);
-        return ResponseEntity.ok().body(toCollectionDTO(locacoes));
-    }
-
     @GetMapping("/cpf/{cpf}")
+    @Operation(summary = "Buscar histórico de locações pelo CPF do cliente, com filtro.",
+            description = "Permite a busca de todos as locações em aberto, ou encerradas de um cliente pelo seu CPF." +
+                    "<br>Retorna uma lista com o histórico de locações do jogo de id informado.")
     public ResponseEntity<List<LocacaoDTO>> buscarHistoricoDeLocacoesPorCPF(
+            @Parameter(description = "CPF do cliente para a busca de locações.")
             @PathVariable String cpf,
+            @Parameter(description = "Selecione 'locacaoativa=true' para filtrar locações em aberto ou " +
+                    "'locacaoativa=false' para todas as locações.")
             @RequestParam(name = "locacaoativa", required = false, defaultValue = "false") boolean locacaoativa) {
         if (locacaoativa) {
             return ResponseEntity.ok().body(toCollectionDTO(locacaoService.buscarLocacoesAtivasPorCPF(cpf)));
@@ -59,26 +74,63 @@ public class LocacaoController {
         }
     }
 
+    @GetMapping("/jogoid/{jogoId}")
+    @Operation(summary = "Buscar histórico de locações pelo id do jogo.",
+            description = "Permite a busca de todos as locações em aberto, ou encerradas de um jogo pelo seu id.<br>" +
+                    "Retorna uma lista com o histórico de locações do jogo de id informado.")
+    public ResponseEntity<List<LocacaoDTO>> buscarHistoricoDeLocacoesPorJogoId(
+            @Parameter(description = "Id do jogo a ser buscado.")
+            @PathVariable Long jogoId) {
+        List<Locacao> locacoes = locacaoService.buscarHistoricoDeLocacoesPorJogoId(jogoId);
+        return ResponseEntity.ok().body(toCollectionDTO(locacoes));
+    }
+
     @GetMapping("/{cpf}/{jogoId}")
+    @Operation(summary = "Buscar histórico de locações pelo par CPF do cliente e id do jogo.",
+            description = "Permite a busca de todas as locações em aberto, ou encerradas pelo par de dados CPF do " +
+                    "cliente e id do jogo.<br>" +
+                    "Retorna uma lista com o histórico de locações para o par CPF do cliente e id do jogo.")
     public ResponseEntity<List<LocacaoDTO>> buscarLocacoesPorCPFeJogoId(
-            @PathVariable String cpf, @PathVariable Long jogoId) {
+            @Parameter(description = "CPF do cliente locador.")
+            @PathVariable String cpf,
+            @Parameter(description = "Id do jogo locado.")
+            @PathVariable Long jogoId) {
         return ResponseEntity.ok().body(toCollectionDTO(locacaoService.buscarLocacoesPorCPFeJogoId(cpf, jogoId)));
     }
 
     @GetMapping("/saldo/{id}")
-    public ResponseEntity<LocacaoDTO> consultarLocacaoParaDevolucao(@PathVariable Long id) {
+    @Operation(summary = "Consultar dados de locação para devolução.",
+            description = "Permite a consulta de dados de uma locação em aberto, pelo id da locação, para " +
+                    "verificar dados como o saldo e a duração da locação, em dias, até o momento.<br>" +
+                    "Retorna a locação em aberto com cálculo de saldo, devido ou a receber, e a duração da locação " +
+                    "em dias até o momento.")
+    public ResponseEntity<LocacaoDTO> consultarLocacaoParaDevolucao(
+            @Parameter(description = "Id da locação para consulta de devolução.")
+            @PathVariable Long id) {
         return ResponseEntity.ok().body(toDTO(locacaoService.consultarLocacaoParaDevolucao(id)));
     }
 
     @PatchMapping("/devolucao/{id}")
-    public ResponseEntity<LocacaoDTO> devolverLocacao(@PathVariable Long id) {
+    @Operation(summary = "Devolver locação.",
+            description = "Realiza a devolução de uma locação.<br>" +
+                    "Retorna a locação com o a data de devolução e o cálculo de saldo, devido ou a receber, e a " +
+                    "duração da locação em dias até o momento.")
+    public ResponseEntity<LocacaoDTO> devolverLocacao(
+            @Parameter(description = "Id da locação que será devolvida.")
+            @PathVariable Long id) {
         return ResponseEntity.ok().body(toDTO(locacaoService.devolverLocacao(id)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> excluirLocacao(@PathVariable Long id) {
+    @Operation(summary = "Deletar locação.",
+            description = "Realiza a exclusão de uma locação do sistema.<br>" +
+                    "Retorna a mensagem de confirmação. Caso seja uma locação em aberto, " +
+                    "o jogo locado se torna disponível para locação.")
+    public ResponseEntity<String> excluirLocacao(
+            @Parameter(description = "Id da locação que será excluída.")
+            @PathVariable Long id) {
         locacaoService.excluirLocacao(id);
-        return ResponseEntity.ok().body("Locação excluída com sucesso!");
+        return ResponseEntity.ok().body("Locação excluída com sucesso! Obrigado!");
     }
 
     public LocacaoDTO toDTO(Locacao locacao) {
