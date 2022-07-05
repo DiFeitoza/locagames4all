@@ -1,5 +1,6 @@
 package ufc.pds.locagames4all.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,6 @@ public class Jogo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nome;
     @Enumerated(EnumType.STRING)
     private TipoJogo tipo;
@@ -25,12 +25,13 @@ public class Jogo {
     private Integer qtdMinJogadores;
     private Integer qtdMaxJogadores;
     private Double valorDiaria;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Boolean excluido;
-
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Enumerated(EnumType.STRING)
     private StatusJogo status;
 
-    public Jogo (String nome, TipoJogo tipo, String descricao, Integer qtdMinJogadores, Integer qtdMaxJogadores, Double valorDiaria) {
+    public Jogo(String nome, TipoJogo tipo, String descricao, Integer qtdMinJogadores, Integer qtdMaxJogadores, Double valorDiaria) {
         this.nome = nome;
         this.tipo = tipo;
         this.descricao = descricao;

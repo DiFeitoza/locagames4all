@@ -33,14 +33,10 @@ public class JogoController {
     @Operation(summary = "Cadastrar jogo", description = "Permite o cadastro de jogos." +
             "<br>Retorna a location do jogo cadastrado." +
             "<br><small>Instruções: clique em 'try it out', manipule o 'body' e clique no botão 'Execute'.")
-    public ResponseEntity<?> cadastrarJogo(@RequestBody Jogo jogo) {
-        Jogo jogoCriado = jogoService.cadastrarJogo(jogo);
+    public ResponseEntity<?> cadastrarJogo(@RequestBody JogoDTO jogoDTO) {
+        Jogo jogoCriado = jogoService.cadastrarJogo(jogoDTO);
         URI jogoURI = linkTo(methodOn(JogoController.class).buscarJogoPorId(jogoCriado.getId())).toUri();
-        return ResponseEntity.created(jogoURI).build();
-        // TODO: 04/07/2022 verificar a forma correta de retorno!
-        /*Jogo jogoCriado = jogoService.cadastrarJogo(jogo);
-        URI jogoURI = linkTo(methodOn(JogoController.class).buscarJogoPorId(jogoCriado.getId())).toUri();
-        return ResponseEntity.created(jogoURI).body(toDTO(jogoCriado));*/
+        return ResponseEntity.created(jogoURI).body(toDTO(jogoCriado));
     }
 
     @GetMapping
@@ -119,7 +115,7 @@ public class JogoController {
             "clique no botão 'Execute'.")
     public ResponseEntity<?> atualizarJogo(
             @Parameter(description = "id do jogo que será atualizado")
-            @PathVariable Long id, @RequestBody Jogo jogoAtualizado) {
+            @PathVariable Long id, @RequestBody JogoDTO jogoAtualizado) {
         if (id.equals(jogoAtualizado.getId())) {
             return ResponseEntity.ok().body(toDTO(jogoService.atualizarJogo(jogoAtualizado)));
         } else {
