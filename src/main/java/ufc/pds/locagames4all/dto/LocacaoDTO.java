@@ -1,6 +1,7 @@
 package ufc.pds.locagames4all.dto;
 
 import lombok.Data;
+import org.springframework.hateoas.RepresentationModel;
 import ufc.pds.locagames4all.model.Cliente;
 import ufc.pds.locagames4all.model.Jogo;
 import ufc.pds.locagames4all.model.Locacao;
@@ -8,25 +9,16 @@ import ufc.pds.locagames4all.model.Locacao;
 import java.time.LocalDate;
 
 @Data
-public class LocacaoDTO {
-    private String cpf;
+public class LocacaoDTO extends RepresentationModel<ClienteDTO> {
+    private long id;
+    private String clienteCpf;
     private Long jogoId;
     private LocalDate dataDaLocacao;
     private LocalDate dataPrevistaDevolucao;
-
-    public LocacaoDTO(String cpf, Long jogoId, LocalDate dataDaLocacao, LocalDate dataPrevistaDevolucao) {
-        this.cpf = cpf;
-        this.jogoId = jogoId;
-        this.dataDaLocacao = dataDaLocacao;
-        this.dataPrevistaDevolucao = dataPrevistaDevolucao;
-    }
-
-    public LocacaoDTO(Locacao locacao) {
-        this.cpf = locacao.getCliente().getCpf();
-        this.jogoId = locacao.getJogo().getId();
-        this.dataDaLocacao = locacao.getDataDaLocacao();
-        this.dataPrevistaDevolucao = locacao.getDataPrevistaDevolucao();
-    }
+    private Double valorDaDiariaNaLocacao;
+    private LocalDate dataDaDevolucao = null;
+    private Long qtdDiasLocados = null;
+    private Double saldo = null;
 
     public Locacao toModel(Cliente cliente, Jogo jogo) {
         Locacao model = new Locacao();
