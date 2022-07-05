@@ -36,11 +36,7 @@ public class JogoController {
     public ResponseEntity<?> cadastrarJogo(@RequestBody Jogo jogo) {
         Jogo jogoCriado = jogoService.cadastrarJogo(jogo);
         URI jogoURI = linkTo(methodOn(JogoController.class).buscarJogoPorId(jogoCriado.getId())).toUri();
-        return ResponseEntity.created(jogoURI).build();
-        // TODO: 04/07/2022 verificar a forma correta de retorno!
-        /*Jogo jogoCriado = jogoService.cadastrarJogo(jogo);
-        URI jogoURI = linkTo(methodOn(JogoController.class).buscarJogoPorId(jogoCriado.getId())).toUri();
-        return ResponseEntity.created(jogoURI).body(toDTO(jogoCriado));*/
+        return ResponseEntity.created(jogoURI).body(toDTO(jogoCriado));
     }
 
     @GetMapping

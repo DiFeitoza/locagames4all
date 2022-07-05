@@ -34,12 +34,12 @@ public class LocacaoService {
     private JogoService jogoService;
 
     public Locacao cadastrarLocacao(LocacaoDTO locacaoDTO) {
-        Cliente cliente = clienteService.buscarClientePorCpf(locacaoDTO.getCpf());
-        if(cliente.getExcluido().equals(true)){
+        Cliente cliente = clienteService.buscarClientePorCpf(locacaoDTO.getClienteCpf());
+        if (cliente.getExcluido().equals(true)) {
             throw new UnsupportedOperationException(MSG_CLIENTE_INATIVO);
         }
         Jogo jogo = jogoService.buscarJogoPorId(locacaoDTO.getJogoId());
-        if(!jogo.getStatus().equals(StatusJogo.DISPONIVEL)){
+        if (!jogo.getStatus().equals(StatusJogo.DISPONIVEL)) {
             throw new UnsupportedOperationException(MSG_JOGO_NAO_DISPONIVEL);
         }
         jogo.setStatus(StatusJogo.ALUGADO);
@@ -95,7 +95,7 @@ public class LocacaoService {
 
     public Locacao consultarLocacaoParaDevolucao(Long id) {
         Locacao locacao = buscarLocacoesPorId(id);
-        if(locacao.getDataDaDevolucao() != null){
+        if (locacao.getDataDaDevolucao() != null) {
             throw new UnsupportedOperationException(MSG_LOCACAO_JA_CONCLUIDA);
         }
         Long diferencaEmDias = ChronoUnit.DAYS.between(LocalDate.now(), locacao.getDataPrevistaDevolucao());
