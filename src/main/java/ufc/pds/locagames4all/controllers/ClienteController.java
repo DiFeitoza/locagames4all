@@ -35,15 +35,6 @@ public class ClienteController {
     @PostMapping
     @Operation(summary = "Cadastrar cliente'",
             description = "Permite o cadastro de clientes.<br>Retorna o cliente criado com sua location.")
-    public ResponseEntity<Cliente> cadastrarCliente(
-            @RequestBody ClienteDTO clienteDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.cadastrarCliente(clienteDTO));
-    }
-
-    @GetMapping
-    @Operation(summary = "Buscar clientes'",
-            description = "Permite a busca de todos os clientes.<br>" +
-                    "Retorna a lista com todos os clientes cadastrados.")
     public ResponseEntity<ClienteDTO> cadastrarCliente(@RequestBody ClienteDTO clienteDTO) {
         Cliente clienteCriado = clienteService.cadastrarCliente(clienteDTO);
         URI clienteURI = linkTo(methodOn(ClienteController.class).buscarClientePorCpf(clienteCriado.getCpf())).toUri();
@@ -51,6 +42,9 @@ public class ClienteController {
     }
 
     @GetMapping
+    @Operation(summary = "Buscar clientes'",
+            description = "Permite a busca de todos os clientes.<br>" +
+                    "Retorna a lista com todos os clientes cadastrados.")
     public List<ClienteDTO> buscarClientes() {
         return toCollectionDTO(clienteService.buscarTodosCLientes());
     }
