@@ -1,31 +1,21 @@
 package ufc.pds.locagames4all.dto;
 
 import lombok.Data;
+import org.springframework.hateoas.RepresentationModel;
 import ufc.pds.locagames4all.model.Cliente;
 
+import java.util.List;
+
 @Data
-public class ClienteDTO {
+public class ClienteDTO extends RepresentationModel<ClienteDTO> {
+    private Long id;
     private String nome;
     private String cpf;
     private String endereco;
     private String telefone;
     private String email;
-
-    public ClienteDTO(String nome, String cpf, String endereco, String telefone, String email) {
-        this.nome = nome;
-        this.cpf = cpf;
-        this.endereco = endereco;
-        this.telefone = telefone;
-        this.email = email;
-    }
-
-    public ClienteDTO(Cliente cliente) {
-        this.nome = cliente.getNome();
-        this.cpf = cliente.getCpf();
-        this.endereco = cliente.getEndereco();
-        this.telefone = cliente.getTelefone();
-        this.email = cliente.getEmail();
-    }
+    private Boolean excluido;
+    private List<JogoDTO> jogosFavoritos;
 
     public Cliente toModel() {
         Cliente cliente = new Cliente();
