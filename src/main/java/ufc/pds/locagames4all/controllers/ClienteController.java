@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ufc.pds.locagames4all.dto.ClienteDTO;
@@ -14,6 +13,7 @@ import ufc.pds.locagames4all.model.Cliente;
 import ufc.pds.locagames4all.model.Jogo;
 import ufc.pds.locagames4all.service.ClienteService;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +44,13 @@ public class ClienteController {
     @Operation(summary = "Buscar clientes'",
             description = "Permite a busca de todos os clientes.<br>" +
                     "Retorna a lista com todos os clientes cadastrados.")
+    public ResponseEntity<ClienteDTO> cadastrarCliente(@RequestBody ClienteDTO clienteDTO) {
+        Cliente clienteCriado = clienteService.cadastrarCliente(clienteDTO);
+        URI clienteURI = linkTo(methodOn(ClienteController.class).buscarClientePorCpf(clienteCriado.getCpf())).toUri();
+        return ResponseEntity.created(clienteURI).body(toDTO(clienteCriado));
+    }
+
+    @GetMapping
     public List<ClienteDTO> buscarClientes() {
         return toCollectionDTO(clienteService.buscarTodosCLientes());
     }
