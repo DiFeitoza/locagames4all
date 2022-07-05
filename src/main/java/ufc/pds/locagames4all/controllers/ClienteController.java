@@ -2,6 +2,8 @@ package ufc.pds.locagames4all.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,11 @@ public class ClienteController {
     @PostMapping
     @Operation(summary = "Cadastrar cliente.",
             description = "Permite o cadastro de clientes.<br>Retorna o cliente criado com sua location.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Recurso criado."),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formatada."),
+            @ApiResponse(responseCode = "422", description = "Regra de Negócio não atendida."),
+    })
     public ResponseEntity<ClienteDTO> cadastrarCliente(@RequestBody ClienteDTO clienteDTO) {
         Cliente clienteCriado = clienteService.cadastrarCliente(clienteDTO);
         URI clienteURI = linkTo(methodOn(ClienteController.class).buscarClientePorCpf(clienteCriado.getCpf())).toUri();
@@ -45,14 +52,22 @@ public class ClienteController {
     @Operation(summary = "Buscar clientes.",
             description = "Permite a busca de todos os clientes.<br>" +
                     "Retorna a lista com todos os clientes cadastrados.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+    })
     public List<ClienteDTO> buscarClientes() {
         return toCollectionDTO(clienteService.buscarTodosCLientes());
     }
 
     @GetMapping("/{cpf}")
-    @Operation(summary = "Buscar cliente pelo CPF",
+    @Operation(summary = "Buscar cliente pelo CPF.",
             description = "Permite a busca de um cliente pelo CPF.<br>" +
                     "Retorna o cliente cadastrado para o CPF informado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+    })
     public ResponseEntity<ClienteDTO> buscarClientePorCpf(
             @Parameter(description = "CPF do cliente que será buscado.")
             @PathVariable String cpf) {
@@ -63,6 +78,12 @@ public class ClienteController {
     @Operation(summary = "Atualizar cliente pelo CPF.",
             description = "Permite a busca de um cliente pelo CPF.<br>" +
                     "Retorna o cliente cadastrado para o CPF informado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente atualizado."),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formatada."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+            @ApiResponse(responseCode = "422", description = "Regra de Negócio não atendida.")
+    })
     public ResponseEntity<ClienteDTO> atualizarCliente(
             @Parameter(description = "CPF do cliente que será atualizado.")
             @PathVariable String cpf,
@@ -77,6 +98,12 @@ public class ClienteController {
     @Operation(summary = "Desativar cliente pelo CPF.",
             description = "Permite que o cliente tenha seus dados apagados e o cadastro desativado.<br>" +
                     "Retorna o cliente com dados atualizados e cadastro com atributo 'excluido = true'.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente desativado."),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formatada."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+            @ApiResponse(responseCode = "422", description = "Regra de Negócio não atendida.")
+    })
     public ResponseEntity<ClienteDTO> desativarCliente(
             @Parameter(description = "CPF do cliente que será desativado.")
             @PathVariable String cpf) {
@@ -88,6 +115,12 @@ public class ClienteController {
             description = "Permite que o cliente favorite um jogo pelo id deste. Um jogo favoritado não pode ser " +
                     "favoritado novamente, da mesma forma, se não for um favorito não pode ser desfavoritado.<br>" +
                     "Retorna o cliente com dados atualizados, incluindo o jogo favoritado ou desfavoritado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente com jogos favoritos atualizado."),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formatada."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+            @ApiResponse(responseCode = "422", description = "Regra de Negócio não atendida.")
+    })
     public ResponseEntity<?> favoritarJogo(
             @Parameter(description = "CPF do cliente que irá favoritar o jogo.")
             @PathVariable String cpf,
@@ -107,6 +140,10 @@ public class ClienteController {
     @Operation(summary = "Listar jogos favoritos.",
             description = "Permite listar os jogos favoritos de um cliente pelo CPF.<br>" +
                     "Retorna a lista de jogos favoritos.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+    })
     public ResponseEntity<?> buscarJogosFavoritos(
             @Parameter(description = "CPF do cliente para busca de favoritos.")
             @PathVariable String cpf) {

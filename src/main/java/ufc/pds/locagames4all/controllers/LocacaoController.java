@@ -2,6 +2,8 @@ package ufc.pds.locagames4all.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,11 @@ public class LocacaoController {
     @Operation(summary = "Cadastrar locação.",
             description = "Permite cadastrar uma locação a partir de um CPF e um id válidos.<br>" +
                     "Retorna retorna a locação cadastrada.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Locação cadastrada."),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formatada."),
+            @ApiResponse(responseCode = "422", description = "Regra de Negócio não atendida."),
+    })
     public ResponseEntity<LocacaoDTO> cadastrarLocacao(
             @Parameter(description = "Modelo de locação para cadastro.")
             @RequestBody LocacaoDTO locacaoDTO) {
@@ -43,6 +50,10 @@ public class LocacaoController {
     @Operation(summary = "Buscar locações.",
             description = "Permite a busca de todos as locações.<br>" +
                     "Retorna a lista com todos as locações cadastradas.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+    })
     public ResponseEntity<List<LocacaoDTO>> buscarLocacoes() {
         return ResponseEntity.ok().body(toCollectionDTO(locacaoService.buscarTodasLocacoes()));
     }
@@ -51,6 +62,10 @@ public class LocacaoController {
     @Operation(summary = "Buscar locação pelo id.",
             description = "Permite a busca de todos as locações.<br>" +
                     "Retorna a lista com todos as locações cadastradas.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+    })
     public ResponseEntity<LocacaoDTO> buscarLocacaoPorId(
             @Parameter(description = "Id da locação a ser buscada.")
             @PathVariable Long id) {
@@ -61,6 +76,10 @@ public class LocacaoController {
     @Operation(summary = "Buscar histórico de locações pelo CPF do cliente, com filtro.",
             description = "Permite a busca de todos as locações em aberto, ou encerradas de um cliente pelo seu CPF." +
                     "<br>Retorna uma lista com o histórico de locações do jogo de id informado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+    })
     public ResponseEntity<List<LocacaoDTO>> buscarHistoricoDeLocacoesPorCPF(
             @Parameter(description = "CPF do cliente para a busca de locações.")
             @PathVariable String cpf,
@@ -75,6 +94,10 @@ public class LocacaoController {
     }
 
     @GetMapping("/jogoid/{jogoId}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+    })
     @Operation(summary = "Buscar histórico de locações pelo id do jogo.",
             description = "Permite a busca de todos as locações em aberto, ou encerradas de um jogo pelo seu id.<br>" +
                     "Retorna uma lista com o histórico de locações do jogo de id informado.")
@@ -90,6 +113,10 @@ public class LocacaoController {
             description = "Permite a busca de todas as locações em aberto, ou encerradas pelo par de dados CPF do " +
                     "cliente e id do jogo.<br>" +
                     "Retorna uma lista com o histórico de locações para o par CPF do cliente e id do jogo.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+    })
     public ResponseEntity<List<LocacaoDTO>> buscarLocacoesPorCPFeJogoId(
             @Parameter(description = "CPF do cliente locador.")
             @PathVariable String cpf,
@@ -104,6 +131,10 @@ public class LocacaoController {
                     "verificar dados como o saldo e a duração da locação, em dias, até o momento.<br>" +
                     "Retorna a locação em aberto com cálculo de saldo, devido ou a receber, e a duração da locação " +
                     "em dias até o momento.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+    })
     public ResponseEntity<LocacaoDTO> consultarLocacaoParaDevolucao(
             @Parameter(description = "Id da locação para consulta de devolução.")
             @PathVariable Long id) {
@@ -115,6 +146,12 @@ public class LocacaoController {
             description = "Realiza a devolução de uma locação.<br>" +
                     "Retorna a locação com o a data de devolução e o cálculo de saldo, devido ou a receber, e a " +
                     "duração da locação em dias até o momento.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Sem conteúdo."),
+            @ApiResponse(responseCode = "400", description = "Requisição mal formatada."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+            @ApiResponse(responseCode = "422", description = "Regra de Negócio não atendida.")
+    })
     public ResponseEntity<LocacaoDTO> devolverLocacao(
             @Parameter(description = "Id da locação que será devolvida.")
             @PathVariable Long id) {
@@ -126,11 +163,16 @@ public class LocacaoController {
             description = "Realiza a exclusão de uma locação do sistema.<br>" +
                     "Retorna a mensagem de confirmação. Caso seja uma locação em aberto, " +
                     "o jogo locado se torna disponível para locação.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Locação excluída."),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado."),
+            @ApiResponse(responseCode = "422", description = "Regra de Negócio não atendida.")
+    })
     public ResponseEntity<String> excluirLocacao(
             @Parameter(description = "Id da locação que será excluída.")
             @PathVariable Long id) {
         locacaoService.excluirLocacao(id);
-        return ResponseEntity.ok().body("Locação excluída com sucesso! Obrigado!");
+        return ResponseEntity.noContent().build();
     }
 
     public LocacaoDTO toDTO(Locacao locacao) {
